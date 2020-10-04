@@ -18,23 +18,15 @@
 <meta property="og:description" content="参考文献： Batch Normalization: Accelerating Deep Network Training b y Reducing Internal Covariate Shift  Batch Normalization（笔记整理） Batch normalization理解 关于BatchNormalization的讨论 深度学习中 Batch Normalization为什">
 <meta property="og:locale">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190502223631165.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQyODIzMDQz,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="http://xpangz.github.io/2019/11/18/Batch%20normalization%E5%AD%A6%E4%B9%A0/images/BN_pic5.png">
-<meta property="og:image" content="http://xpangz.github.io/2019/11/18/Batch%20normalization%E5%AD%A6%E4%B9%A0/images/BN_pic6.png">
-<meta property="og:image" content="http://xpangz.github.io/2019/11/18/Batch%20normalization%E5%AD%A6%E4%B9%A0/images/BN_pic7.png">
 <meta property="og:image" content="https://math.jianshu.com/math?formula=a_i">
 <meta property="og:image" content="https://math.jianshu.com/math?formula=a_i%5E%7Bnorm%7D">
 <meta property="og:image" content="https://math.jianshu.com/math?formula=m%0A%0A">
 <meta property="og:image" content="https://math.jianshu.com/math?formula=d">
 <meta property="og:image" content="https://math.jianshu.com/math?formula=%5Cgamma%20">
 <meta property="og:image" content="https://math.jianshu.com/math?formula=%5Cbeta%20">
-<meta property="og:image" content="http://xpangz.github.io/2019/11/18/Batch%20normalization%E5%AD%A6%E4%B9%A0/images/BN_pic8.png">
-<meta property="og:image" content="http://xpangz.github.io/2019/11/18/Batch%20normalization%E5%AD%A6%E4%B9%A0/images/BN_pic1.png">
-<meta property="og:image" content="http://xpangz.github.io/2019/11/18/Batch%20normalization%E5%AD%A6%E4%B9%A0/images/BN_pic2.png">
-<meta property="og:image" content="http://xpangz.github.io/2019/11/18/Batch%20normalization%E5%AD%A6%E4%B9%A0/images/BN_pic3.png">
 <meta property="og:image" content="https://math.jianshu.com/math?formula=%5Cbeta%20">
-<meta property="og:image" content="http://xpangz.github.io/2019/11/18/Batch%20normalization%E5%AD%A6%E4%B9%A0/images/BN_pic4.png">
 <meta property="article:published_time" content="2019-11-18T15:35:00.000Z">
-<meta property="article:modified_time" content="2019-11-18T15:41:10.602Z">
+<meta property="article:modified_time" content="2020-10-04T07:12:06.794Z">
 <meta property="article:author" content="小胖子">
 <meta property="article:tag" content="神经网络">
 <meta name="twitter:card" content="summary">
@@ -242,7 +234,7 @@
       <!-- 百度字体平台:http://fontstore.baidu.com/static/editor/index.html -->
       <i class="icon-statistics"></i>
       <span class="post-meta-item-text"> 字数统计:</span>
-      <span class="post-count">2.7k字</span>
+      <span class="post-count">2.8k字</span>
     </span>
   </span>
 
@@ -325,21 +317,21 @@
 <p>我们知道，常规的CNN一般由卷积层、下采样层及全连接层构成。全连接层形式上与前向神经网络是一样的，所以可以采取前向神经网络中的BatchNorm方式，而下采样层本身不带参数所以可以忽略，所以CNN中主要关注卷积层如何计算BatchNorm。</p>
 <p>CNN中的某个卷积层由m个卷积核构成，每个卷积核对三维的输入（<strong>通道数*长*宽</strong>）进行计算，激活及输出值是个二维平面（<strong>长*宽</strong>），对应一个输出通道（参考下面第一幅图），由于存在<strong>m</strong>个卷积核，所以输出仍然是三维的，由<strong>m</strong>个通道及每个通道的二维平面构成。</p>
 </blockquote>
-<p><img src="images/BN_pic5.png" alt="图7：CNN中的卷积核"></p>
-<p><img src="images/BN_pic6.png" alt="图8.CNN中的BatchNorm过程"></p>
+<p>![图7：CNN中的卷积核](Batch normalization学习/BN_pic5.png)</p>
+<p>![图8.CNN中的BatchNorm过程](Batch normalization学习/BN_pic6.png)</p>
 <blockquote>
 <p>那么在卷积层中，如果要对通道激活二维平面中某个激活值进行Normalization操作，怎么确定神经元集合S的势力范围呢？第二幅图给出了示意图。类似于前向神经网络中的BatchNorm计算过程，对于Mini-Batch训练方法来说，反向传播更新梯度使用Batch中所有实例的梯度方向来进行。</p>
 <p>​    所以对于CNN某个卷积层对应的输出通道k来说，假设某个Batch包含n个训练实例，那么每个训练实例在这个通道k都会产生一个二维激活平面，也就是说Batch中n个训练实例分别通过同一个卷积核的输出通道k的时候产生了n个激活平面(Feature Map)。假设激活平面长为5，宽为4，则激活平面包含20个激活值，n个不同实例的激活平面共包含20*n个激活值。</p>
 <p>​    那么BatchNorm的集合S的范围就是由这20*n个同一个通道被Batch不同训练实例激发的激活平面中包含的所有激活值构成（对应图8中所有标为蓝色的激活值）。划定集合S的范围后，激活平面中任意一个激活值都需进行Normalization操作，其Normalization的具体计算过程与前文所述计算过程一样，采用公式3即可完成规范化操作。这样即完成CNN卷积层的BatchNorm转换过程。</p>
 </blockquote>
-<p><img src="images/BN_pic7.png"><br>其中，<img src="https://math.jianshu.com/math?formula=a_i" alt="a_i"> 为某个神经元原始激活值，<img src="https://math.jianshu.com/math?formula=a_i%5E%7Bnorm%7D" alt="a_i^{norm}">为经过规范化操作后的规范后值 ,$\mu$自己认为是20*n个激活值的平均值，$\sigma$是4x5xn个统计数据产生，而每个特征图使用一组$\gamma$和$\beta$。</p>
+<p>![](Batch normalization学习/BN_pic7.png)<br>其中，<img src="https://math.jianshu.com/math?formula=a_i" alt="a_i"> 为某个神经元原始激活值，<img src="https://math.jianshu.com/math?formula=a_i%5E%7Bnorm%7D" alt="a_i^{norm}">为经过规范化操作后的规范后值 ,$\mu$自己认为是20*n个激活值的平均值，$\sigma$是4x5xn个统计数据产生，而每个特征图使用一组$\gamma$和$\beta$。</p>
 <blockquote>
-<p>在下图中,假设一个批量有<img src="https://math.jianshu.com/math?formula=m%0A%0A" alt="m">个样本，Feature Map的尺寸是<strong>p</strong>x<strong>q</strong>，通道数是<img src="https://math.jianshu.com/math?formula=d" alt="d">，在卷积网络的中，BN的操作是以Feature Map为单位的，因此一个BN要统计的数据个数为 <strong>m</strong>x<strong>p</strong>x<strong>q</strong>，每个Feature Map使用一组 <img src="https://math.jianshu.com/math?formula=%5Cgamma%20" alt="\gamma ">和<img src="https://math.jianshu.com/math?formula=%5Cbeta%20" alt="\beta ">。<img src="images/BN_pic8.png" alt="卷积网络的BN示意图"></p>
+<p>在下图中,假设一个批量有<img src="https://math.jianshu.com/math?formula=m%0A%0A" alt="m">个样本，Feature Map的尺寸是<strong>p</strong>x<strong>q</strong>，通道数是<img src="https://math.jianshu.com/math?formula=d" alt="d">，在卷积网络的中，BN的操作是以Feature Map为单位的，因此一个BN要统计的数据个数为 <strong>m</strong>x<strong>p</strong>x<strong>q</strong>，每个Feature Map使用一组 <img src="https://math.jianshu.com/math?formula=%5Cgamma%20" alt="\gamma ">和<img src="https://math.jianshu.com/math?formula=%5Cbeta%20" alt="\beta ">。![卷积网络的BN示意图](Batch normalization学习/BN_pic8.png)</p>
 </blockquote>
-<h3 id="公式理解："><a href="#公式理解：" class="headerlink" title="公式理解："></a>公式理解：</h3><p>$$ \hat{x}^{k} = \dfrac{x^{(K)}-E[x^{(k)}]}{\sqrt{Var[x^{(k)}]}} $$ 其中$E[x]$为均值，$\sqrt{Var}$为标准差，接下来再$$y^{(k)} = \gamma^{(k)}\hat{x}^{(k)}+\beta^{(k)}$$ $y^{(k)}$就是$bn()$的输出<br>批处理的公式流程如下<br><img src="images/BN_pic1.png"><br>数学上理解，激活函数的输入$x=wu+b$会随着网络加深，逐渐向两端靠拢，两个函数的导数在两侧梯度变化趋于0， 这会导致在Back propagation的时候梯度消失，也就是说收敛越来越慢 。<br><img src="images/BN_pic2.png"><br> $Tanh’=1-tanh^2$</p>
-<p><img src="images/BN_pic3.png"></p>
+<h3 id="公式理解："><a href="#公式理解：" class="headerlink" title="公式理解："></a>公式理解：</h3><p>$$ \hat{x}^{k} = \dfrac{x^{(K)}-E[x^{(k)}]}{\sqrt{Var[x^{(k)}]}} $$ 其中$E[x]$为均值，$\sqrt{Var}$为标准差，接下来再$$y^{(k)} = \gamma^{(k)}\hat{x}^{(k)}+\beta^{(k)}$$ $y^{(k)}$就是$bn()$的输出<br>批处理的公式流程如下<br>![](Batch normalization学习/BN_pic1.png)<br>数学上理解，激活函数的输入$x=wu+b$会随着网络加深，逐渐向两端靠拢，两个函数的导数在两侧梯度变化趋于0， 这会导致在Back propagation的时候梯度消失，也就是说收敛越来越慢 。<br>![](Batch normalization学习/BN_pic2.png)<br> $Tanh’=1-tanh^2$</p>
+<p>![](Batch normalization学习/BN_pic3.png)</p>
 <p>可能是前面进行的操作与线性函数效果相同？为了保证非线性的获得，对变换后的满足均值为0方差为1的x又进行了scale加上shift操作$(y=scale*x+shift)$，每个神经元增加了两个参数scale和shift参数，通过训练学习得到， 这样等价于非线性函数的值从正中心周围的线性区往非线性区动了动。核心思想应该是想找到一个线性和非线性的较好平衡点，既能享受非线性的较强表达能力的好处，又避免太靠非线性区两头使得网络收敛速度太慢。（来源3）<br> 这种表示会对模型的收敛有帮助，但是也可能破坏已经学习到的特征。为了解决这个问题，BN添加了两个可以学习的变量<img src="https://math.jianshu.com/math?formula=%5Cbeta%20" alt="\beta ">和 用于控制网络能够表达直接映射，也就是能够还原BN之前学习到的特征。（来源4）</p>
-<p>整个流程就是<img src="images/BN_pic4.png"></p>
+<p>整个流程就是![](Batch normalization学习/BN_pic4.png)</p>
 
     
 
