@@ -17,18 +17,18 @@
 <meta property="og:site_name" content="Xpangz">
 <meta property="og:description" content="首先，论文地址。 特点：">
 <meta property="og:locale">
-<meta property="og:image" content="http://xpangz.github.io/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/images/clip_image001.png">
-<meta property="og:image" content="http://xpangz.github.io/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/images/Unet_pic4.png">
-<meta property="og:image" content="http://xpangz.github.io/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/images/Unet_pic2.png">
-<meta property="og:image" content="http://xpangz.github.io/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/images/Unet_pic3.png">
-<meta property="og:image" content="http://xpangz.github.io/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/images/Unet_pic5.png">
+<meta property="og:image" content="http://xpangz.github.io/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/clip_image001.png">
+<meta property="og:image" content="http://xpangz.github.io/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/Unet_pic4.png">
+<meta property="og:image" content="http://xpangz.github.io/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/Unet_pic2.png">
+<meta property="og:image" content="http://xpangz.github.io/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/Unet_pic3.png">
+<meta property="og:image" content="http://xpangz.github.io/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/Unet_pic5.png">
 <meta property="article:published_time" content="2019-10-27T14:00:00.000Z">
-<meta property="article:modified_time" content="2019-11-18T08:20:58.083Z">
+<meta property="article:modified_time" content="2020-10-04T07:05:41.883Z">
 <meta property="article:author" content="小胖子">
 <meta property="article:tag" content="神经网络">
 <meta property="article:tag" content="论文分析">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://xpangz.github.io/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/images/clip_image001.png">
+<meta name="twitter:image" content="http://xpangz.github.io/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/clip_image001.png">
   
     <link rel="alternative" href="/atom.xml" title="Xpangz" type="application/atom+xml">
   
@@ -266,21 +266,21 @@
 </ul>
 <h3 id="相关研究分析："><a href="#相关研究分析：" class="headerlink" title="相关研究分析："></a><strong>相关研究分析：</strong></h3><p>CNN有局限性，在于网络和训练集的大小。自ImageNet之后，更大更深的网络也相继出现。生物医学无法提供数以千计的训练图像。</p>
 <p>A classifier output that takes into account the features form multiple layers,使得 good localization 和good use of context是同时可能的。</p>
-<h2 id="Network"><a href="#Network" class="headerlink" title="Network"></a>Network</h2><p>​     <img src="images/clip_image001.png" alt="WIput  image  128  128 64 64 2  output  segmentation  map  3x3, ReLU  copy and crop  max pool 2x2  up.conv 2x2  conv IXI  Fig. 1. U-net architecture (example for 32x32 pixels in the lowest resolution). Each blue  box corresponds to 8 multi-channel feature map. The number of channels is denoted  on top of the box. The x-y-size is provided Rt the lower left edge of the box. White  boxes represent copied feature maps. The arrows denote the different operations. ">  </p>
-<p>两条路径，一条contracting path to capture context ,一条expanding path that enable precise localization。 contracting path是经典的CNN网络。<br><img src="images/Unet_pic4.png"><br>最后一层使用1x1 convolution 将64 component feature vector映射到所需类别数量。 总共23个卷积层。</p>
+<h2 id="Network"><a href="#Network" class="headerlink" title="Network"></a>Network</h2><p>​     <img src="/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/clip_image001.png" alt="WIput  image  128  128 64 64 2  output  segmentation  map  3x3, ReLU  copy and crop  max pool 2x2  up.conv 2x2  conv IXI  Fig. 1. U-net architecture (example for 32x32 pixels in the lowest resolution). Each blue  box corresponds to 8 multi-channel feature map. The number of channels is denoted  on top of the box. The x-y-size is provided Rt the lower left edge of the box. White  boxes represent copied feature maps. The arrows denote the different operations. ">  </p>
+<p>两条路径，一条contracting path to capture context ,一条expanding path that enable precise localization。 contracting path是经典的CNN网络。<br><img src="/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/Unet_pic4.png"><br>最后一层使用1x1 convolution 将64 component feature vector映射到所需类别数量。 总共23个卷积层。</p>
 <p>为了实现分割后输出图的无缝平铺，选择输入tile size的大小很重要(例如以供所有的2x2池化操作都能应用到有x与y均匀大小的层当中)</p>
 <p><strong>无填充卷积unpadded convolutions</strong>：即卷积pad=0,这使得图像进行一次卷积会失去边界（图像一周）像素点。因此在3中对应path的feature连接时需要对contract path进行crop。因此The cropping 是必要的，因为每次卷积操作中边界的pixel有损失。</p>
 <h4 id="如何crop-收缩路径和扩展路径中的对应层通过channel维度连接（concatenation）起来。（与fcn中的不同）"><a href="#如何crop-收缩路径和扩展路径中的对应层通过channel维度连接（concatenation）起来。（与fcn中的不同）" class="headerlink" title="如何crop:收缩路径和扩展路径中的对应层通过channel维度连接（concatenation）起来。（与fcn中的不同）"></a>如何crop:收缩路径和扩展路径中的对应层通过channel维度连接（concatenation）起来。（与fcn中的不同）</h4><p>输出结果应包括localization,每个pixel都要被贴上标签。<br>high resolution features from thr contracting path are combined with the upsampled output.卷积层就能够基于这些combined后的信息学习到更精确的输出。</p>
 <p>在upsampling part 有大量的特征通道，能够 allow the network<br>to propagate context information to higher resolution layers</p>
 <p>通过overlap-tile策略允许任意大的图片进行无缝分割。</p>
-<p>tiling strategy is important to apply the network to large images(since otherwise the resolution would be limited by the GPU memory,???)——缺失边界信息的pixel处理：使用镜像<br><img src="images/Unet_pic2.png"></p>
+<p>tiling strategy is important to apply the network to large images(since otherwise the resolution would be limited by the GPU memory,???)——缺失边界信息的pixel处理：使用镜像<br><img src="/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/Unet_pic2.png"></p>
 <p>对现有训练集使用弹性形变(elastic deformations)进行数据增广，<br>好处：<br>1、通过弹性形变网络能够学到invariance；<br>2、without the need to see these transformations in the annotated image corpus(带注释的图像语料库) 因为形变是组织中最常用的变化，弹性形变能够很有效的模拟这种变化。</p>
-<p>相同类别且很接近的目标分离：提出一种权重损失，使得相互touching的目标之间获得较大的权重(where the separating background labels between touching cells obtain a large weight in the loss function.),强迫网络学习边界信息。<br><img src="images/Unet_pic3.png"></p>
+<p>相同类别且很接近的目标分离：提出一种权重损失，使得相互touching的目标之间获得较大的权重(where the separating background labels between touching cells obtain a large weight in the loss function.),强迫网络学习边界信息。<br><img src="/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/Unet_pic3.png"></p>
 <h2 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h2><p>输入图像和相应分割图像常被用来训练网络，在Caffe中使用 stochastic gradient descent来实现。</p>
 <p>由于unpadded convolutions，输出图像小于一个恒定边界宽度的输入图像。为了最小化开销和最大限度地使用GPU，我们倾向于large input tiles over a large batch size and hence reduce the batch to a single image.（为了对于一张图片减少批次处理，倾向于很大卷积在大规模的批次上）。</p>
 <p>文章相应地使用high momentum(0.99)以便先前所见到的大量训练样本决定当前优化步骤的更新。<br>使用Momentum为解决学习率小时收敛到极值的速度较慢，而学习率较大时，又容易发生震荡，以及Hessian矩阵病态条件问题，可以理解为惯性， 积攒了历史的梯度 ，使当前梯度小幅影响优化方向，而不是完全决定优化方向。也起到了减小波动的效果。 momentum公式（参数为lambda，越大表示之前梯度对现在方向的影响也越大）：<br>$$<br>v_t = \lambda v_{t-1}+\eta*\nabla_{\theta}J(\theta)\<br>\theta = \theta - v_t<br>$$<br>能量函数是在最终特征图上使用soft-max+交叉熵损失函数。<br>soft-max为$a_k(x)$表示在特征通道k中像素位置的激活，K是标签类别数量，$p_k(x)$是approximated maximum-function,即最大的$a_k(x)$对应的p(x)就接近于1，其余接近于0）：<br>$$<br>p_k(x)=\dfrac{e^{a_{k}(x)}}{\sum^K_{k’=1}e^{a_{k’}(x)}}<br>$$<br>Cross entropy loss function为：<br>$$<br>E = \sum_{x\in \Omega}\omega(x)log(p_{l(x)}(x))<br>$$<br>交叉熵通过在每个位置上$p_{l(x)}(x)$距离1的违背程度进行惩罚，其中$l$是每个像素真正的标签，$\omega$是在训练中给pixels定义重要性所引入的权重。</p>
 <p>预先计算每个真正分割的权重图for each ground truth segmentation,来补偿在训练集中每个特定标签的不同频率？并且强迫网络学习相互接触的细胞之间的分割。</p>
-<p>边界上的计算——morphological operations。权重计算公式：<br><img src="images/Unet_pic5.png"></p>
+<p>边界上的计算——morphological operations。权重计算公式：<br><img src="/2019/10/27/%E6%B5%85%E6%9E%90Unet%E7%BD%91%E7%BB%9C/Unet_pic5.png"></p>
 <p>一个好的初始权重极其重要，理想地，应调整初始权重，使得网络中的每个特征映射都有近似单位方差。本文从标准方差($\sqrt{\dfrac{2}{N}}$,N=3x3x64=576)的高斯分布中提取初始权值。</p>
 <p>数据增广：主要需要平移和旋转的不变性以及形变和灰度值变化的鲁棒性。训练样本的随机弹性形变似乎是训练一个标注图像很少的分割网络的关键概念。Unet中：我们使用3×3粗网格上的随机位移向量生成平滑形变。位移是从一个10像素标准差的高斯分布中采样的。Per-pixel displacements are then computed using bicubic interpolation.在contracting path最后的Drop-out layers 执行进一步的implicit data augmentation.</p>
 <p>其它价值文献博客：</p>
